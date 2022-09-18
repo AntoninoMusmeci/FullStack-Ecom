@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
 import { useStateContext } from "../../utils/context";
+import {toast} from "react-hot-toast"
 function ProductDetails() {
   //Fetch data from strapi (graph qa)
   const { query } = useRouter();
@@ -21,7 +22,9 @@ function ProductDetails() {
   const product = data.products.data[0].attributes
   const { Title, Description, image, price } = product
   const {quantity, increaseQuantity, decreseQuantity, addToBag} = useStateContext()
-
+  const notify = () => {
+    toast.success(`${Title}: ${Description} added to the cart`)
+  }
   return (
     <ProductDetailsStyled>
       <img src={image.data.attributes.formats.medium.url} />
@@ -40,7 +43,7 @@ function ProductDetails() {
             <FaPlusCircle />
           </button>
         </QuantitySectionStyled>
-        <AddButtonStyled onClick = { () => {addToBag(product, quantity)}}> Add to Cart </AddButtonStyled>
+        <AddButtonStyled onClick = { () => {  notify(), addToBag(product, quantity)}}> Add to Cart </AddButtonStyled>
       </ProductInfoStyled>
     </ProductDetailsStyled>
   );
