@@ -1,23 +1,50 @@
 import React from "react";
 import styled from "styled-components";
 import { useStateContext } from "../utils/context";
+import { handleCheckout } from "../utils/stripeApi"
 import { QuantitySectionStyled } from "../pages/products/[slug]";
 import { AiOutlineShoppingCart } from "react-icons/Ai";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
+
+const { motion } = require("framer-motion");
+
 function Bag() {
-  const { bag, setShowBag, addToBag, decreaseQuantity, total } = useStateContext();
+  const { bag, setShowBag, addToBag, decreaseQuantity, total } =
+    useStateContext();
   return (
-    <BagWrapper onClick={() => setShowBag(false)}>
-      <BagStyled onClick={(e) => e.stopPropagation()}>
+    <BagWrapper
+      animate={{ opacity: 1 }}
+      initial={{ opacity: 0 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setShowBag(false)}
+    >
+      <BagStyled
+        layout
+        animate={{ x: "0%" }}
+        initial={{ x: "50%" }}
+        exit={{ x: "50%" }}
+        transition={{ type: "tween" }}
+        onClick={(e) => e.stopPropagation()}
+      >
         {bag.length < 1 ? (
-          <EmptyBagStyle>
+          <EmptyBagStyle
+            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.7 }}
+            transition={{ delay: 0.4 }}
+          >
             <h1> Your Cart is Empty</h1>
             <AiOutlineShoppingCart />
           </EmptyBagStyle>
         ) : (
           bag.map((item) => {
             return (
-              <ItemStyled>
+              <ItemStyled
+                layout
+                key={item.product.slug}
+                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, scale: 0.7, transition: { delay: 0.4 }}}
+              
+              >
                 <img
                   src={item.product.image.data.attributes.formats.thumbnail.url}
                   alt=""
@@ -48,19 +75,21 @@ function Bag() {
             );
           })
         )}
-        
-        {bag.length > 0 && 
-          <TotalStyled>
-            <h3> Subtotal: {total}$ </h3>
-            <button> Purchase </button>
-          </TotalStyled>
-        }
+        <TotalStyled layout>
+          {bag.length > 0 && (
+            <div>
+              {" "}
+              <h3> Subtotal: {total}$ </h3>
+              <button onClick = {() => handleCheckout(bag) }> Purchase </button>
+            </div>
+          )}
+        </TotalStyled>
       </BagStyled>
     </BagWrapper>
   );
 }
 
-const BagWrapper = styled.div`
+const BagWrapper = styled(motion.div)`
   position: fixed;
   right: 0;
   top: 0;
@@ -72,14 +101,14 @@ const BagWrapper = styled.div`
   justify-content: flex-end;
 `;
 
-const BagStyled = styled.div`
+const BagStyled = styled(motion.div)`
   width: 40%;
   background: #f1f1f1;
   padding: 2rem 5rem;
   overflow-y: scroll;
   position: relative;
 `;
-const ItemStyled = styled.div`
+const ItemStyled = styled(motion.div)`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -93,14 +122,14 @@ const ItemStyled = styled.div`
   }
 `;
 
-const ItemInfo = styled.div`
+const ItemInfo = styled(motion.div)`
   width: 50%;
   div {
     display: flex;
     justify-content: space-between;
   }
 `;
-const EmptyBagStyle = styled.div`
+const EmptyBagStyle = styled(motion.div)`
   /* For the empty cart */
   position: absolute;
   top: 0;
@@ -117,7 +146,7 @@ const EmptyBagStyle = styled.div`
   }
 `;
 
-const TotalStyled = styled.div`
+const TotalStyled = styled(motion.div)`
   button {
     background: var(--primary);
     padding: 1rem 2rem;

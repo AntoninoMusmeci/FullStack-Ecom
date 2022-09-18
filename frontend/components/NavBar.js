@@ -4,30 +4,35 @@ import styled from "styled-components";
 import Bag from "./Bag";
 import { AiOutlineShoppingCart } from "react-icons/Ai";
 import { useStateContext } from "../utils/context";
+const { AnimatePresence } = require("framer-motion");
 
 function NavBar() {
-
-  const {showBag, setShowBag,totalQuantity} = useStateContext()
+  const { showBag, setShowBag, totalQuantity } = useStateContext();
 
   return (
     <NavStyled>
-     
       <Link href={"/"}> Home </Link>
 
-      <NavIcons onClick = {() => {setShowBag(true)}}>
+      <NavIcons
+        onClick={() => {
+          setShowBag(true);
+        }}
+      >
         <div>
-        {totalQuantity > 0 && <span> {totalQuantity}</span>}
+          {totalQuantity > 0 && (
+            <span>
+              {totalQuantity}
+            </span>
+          )}
           <AiOutlineShoppingCart />
-            <h3> Cart </h3> 
+          <h3> Cart </h3>
         </div>
       </NavIcons>
-      {showBag && <Bag/>}
-  
+      <AnimatePresence>{showBag && <Bag />}</AnimatePresence>
     </NavStyled>
   );
 }
 const NavStyled = styled.nav`
- 
   min-height: 15vh;
   display: flex;
   justify-content: space-between;
@@ -42,7 +47,7 @@ const NavIcons = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  div{
+  div {
     margin-left: 3rem;
     display: flex;
     position: relative;
@@ -50,7 +55,7 @@ const NavIcons = styled.div`
     align-items: center;
     cursor: pointer;
   }
-  h3{
+  h3 {
     font-size: 0.75rem;
     padding: 0.25rem;
   }
@@ -76,8 +81,4 @@ const NavIcons = styled.div`
   }
 `;
 
-
-
-
-
-export default  NavBar;
+export default NavBar;
