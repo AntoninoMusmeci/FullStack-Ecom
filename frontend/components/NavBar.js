@@ -2,32 +2,34 @@ import React from "react";
 import Link from "next/link";
 import styled from "styled-components";
 import Bag from "./Bag";
+import User from "./User";
 import { AiOutlineShoppingCart } from "react-icons/Ai";
 import { useStateContext } from "../utils/context";
+import { useUser } from "@auth0/nextjs-auth0";
 const { AnimatePresence } = require("framer-motion");
 
 function NavBar() {
   const { showBag, setShowBag, totalQuantity } = useStateContext();
-
+  const { user, error, isLoading } = useUser();
+  
   return (
     <NavStyled>
       <Link href={"/"}> Home </Link>
 
-      <NavIcons
-        onClick={() => {
-          setShowBag(true);
-        }}
-      >
-        <div>
-          {totalQuantity > 0 && (
-            <span>
-              {totalQuantity}
-            </span>
-          )}
+      <NavIcons>
+        <User user= {user} />
+        <div
+          onClick={() => {
+            setShowBag(true);
+          }}
+        >
+          {totalQuantity > 0 && <span>{totalQuantity}</span>}
+
           <AiOutlineShoppingCart />
           <h3> Cart </h3>
         </div>
       </NavIcons>
+
       <AnimatePresence>{showBag && <Bag />}</AnimatePresence>
     </NavStyled>
   );

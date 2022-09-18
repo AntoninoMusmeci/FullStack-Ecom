@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^1.9.1",
     "@stripe/stripe-js": "^1.36.0",
     "framer-motion": "^7.3.5",
     "next": "12.3.0",

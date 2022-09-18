@@ -9,3 +9,5 @@ https://cloudinary.com/ (transform image, automatically generate image and video
 
 https://react-icons.github.io/react-icons/ (for icons)
 
+auth0 for authentication with google auth
+
