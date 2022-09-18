@@ -65,6 +65,7 @@ export const StateContext = ({ children }) => {
     <EcomContext.Provider
       value={{
         quantity,
+        setQuantity,
         increaseQuantity,
         decreseQuantity,
         bag,

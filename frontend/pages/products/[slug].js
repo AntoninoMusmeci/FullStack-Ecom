@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "urql";
 import { QUERY_PRODUCT } from "../../utils/query";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
 import { useStateContext } from "../../utils/context";
-import {toast} from "react-hot-toast"
+import { toast } from "react-hot-toast";
 function ProductDetails() {
   //Fetch data from strapi (graph qa)
   const { query } = useRouter();
@@ -19,12 +19,18 @@ function ProductDetails() {
   if (error) return <p> Error!! </p>;
 
   console.log(data.products.data);
-  const product = data.products.data[0].attributes
-  const { Title, Description, image, price } = product
-  const {quantity, increaseQuantity, decreseQuantity, addToBag} = useStateContext()
+  const product = data.products.data[0].attributes;
+  const { Title, Description, image, price } = product;
+  const { quantity, increaseQuantity, decreseQuantity, addToBag, setQuantity } =
+    useStateContext();
   const notify = () => {
-    toast.success(`${Title}: ${Description} added to the cart`)
-  }
+    toast.success(`${Title}: ${Description} added to the cart`);
+  };
+  useEffect(() => {
+    setQuantity(1);
+  }, []);
+
+
   return (
     <ProductDetailsStyled>
       <img src={image.data.attributes.formats.medium.url} />
@@ -34,16 +40,23 @@ function ProductDetails() {
         <h3> {price} </h3>
 
         <QuantitySectionStyled>
-          <span> Quantity </span>    
+          <span> Quantity </span>
           <button onClick={decreseQuantity}>
-          <FaMinusCircle />
-          </button >
+            <FaMinusCircle />
+          </button>
           <p> {quantity} </p>
           <button onClick={increaseQuantity}>
             <FaPlusCircle />
           </button>
         </QuantitySectionStyled>
-        <AddButtonStyled onClick = { () => {  notify(), addToBag(product, quantity)}}> Add to Cart </AddButtonStyled>
+        <AddButtonStyled
+          onClick={() => {
+            notify(), addToBag(product, quantity);
+          }}
+        >
+          {" "}
+          Add to Cart{" "}
+        </AddButtonStyled>
       </ProductInfoStyled>
     </ProductDetailsStyled>
   );
